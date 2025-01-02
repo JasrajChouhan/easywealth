@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, LogIn, PenBox } from 'lucide-react';
+import { LayoutDashboard, PenBox } from 'lucide-react';
 
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 
 export const Header = () => {
   return (
-    <header>
+    <header className="fixed top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
       <div className="flex items-center justify-between border border-r-2 px-3 py-5 shadow-md">
         <div className="log-div">
           <Link href={'/'}>
@@ -15,17 +15,9 @@ export const Header = () => {
         </div>
 
         <div className="flex items-center justify-between gap-2">
-          <div className="login-btn">
-            <Button variant="link">
-              <LogIn size={24} />
-              Log In
-            </Button>
-          </div>
-
           {/* 
             show page links here when user is signed out
           */}
-
           <div className="link-div hidden items-center gap-2 md:flex">
             <SignedOut>
               <a href="#features" className="text-gray-300 hover:text-blue-600">
