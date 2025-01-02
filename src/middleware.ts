@@ -7,7 +7,7 @@ const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)']);
 const isProtectRoute = createRouteMatcher([
   '/dashboard(.*)',
   '/account(.*)',
-  'transactions(.*)',
+  '/transactions(.*)',
 ]);
 
 export default clerkMiddleware(async (auth, request) => {
