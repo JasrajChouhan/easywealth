@@ -3,8 +3,10 @@ import { LayoutDashboard, PenBox } from 'lucide-react';
 
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
+import { checkUser } from '@/lib/check-user';
 
-export const Header = () => {
+export const Header = async () => {
+  await checkUser();
   return (
     <header className="fixed top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
       <div className="flex items-center justify-between border border-r-2 px-3 py-5 shadow-md">
