@@ -17,6 +17,12 @@ module.exports = {
     'prettier/prettier': ['error', {}, { usePrettierrc: true }],
     // Additional recommended rules
     'react/react-in-jsx-scope': 'off', // Next.js automatically imports React
-    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      {
+        varsIgnorePattern: '^_',
+        argsIgnorePattern: '^_',
+      },
+    ],
   },
 };
