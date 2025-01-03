@@ -1,20 +1,27 @@
+'use server';
+
 import { db } from '@/lib/prisma';
+import { AccountSchema } from '@/schemas/account.schema';
+import { AccountSchemaType } from '@/types/account.types';
 import { auth } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 
-const serilizeBalance = (obj) => {
-  const serilized = { ...obj };
+const serializeBalance = (obj: { balance?: any }) => {
+  const serialized = { ...obj };
 
   if (obj.balance) {
-    serilized.balance = obj.balance.toNumber();
+    serialized.balance = obj.balance.toNumber();
   }
 
-  return serilized;
+  return serialized;
 };
 
-export const createAccount = async (data) => {
+export const createAccount = async (data: AccountSchemaType) => {
+  const parsedData = AccountSchema.parse(data);
   try {
     const { userId } = await auth();
+    console.log(userId);
+    console.log(auth);
 
     if (!userId) {
       throw new Error('Unauthorized');
@@ -23,7 +30,7 @@ export const createAccount = async (data) => {
     // get user
     const user = await db.user.findUnique({
       where: {
-        id: userId,
+        clerkUserId: userId,
       },
     });
 
@@ -31,7 +38,7 @@ export const createAccount = async (data) => {
       throw new Error('Unauthorized');
     }
 
-    const balanceFloat = parseFloat(data.balance);
+    const balanceFloat = parseFloat(parsedData.balance);
     if (isNaN(balanceFloat)) {
       throw new Error('Invalid balance');
     }
@@ -44,7 +51,7 @@ export const createAccount = async (data) => {
     });
 
     const shouldBeDefault =
-      existingAccounts?.length === 0 ? true : data.isDefault;
+      existingAccounts?.length === 0 ? true : parsedData.isDefault;
 
     if (shouldBeDefault) {
       await db.account.updateMany({
@@ -61,13 +68,13 @@ export const createAccount = async (data) => {
     // create account
     const account = await db.account.create({
       data: {
-        ...data,
+        ...parsedData,
         balance: balanceFloat,
         userId: user.id,
         isDefault: shouldBeDefault,
       },
     });
-    const serilizedAccount = serilizeBalance(account);
+    const serilizedAccount = serializeBalance(account);
 
     revalidatePath('/dashboard');
 
