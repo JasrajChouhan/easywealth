@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { endOfDay, format, startOfDay, subDays } from "date-fns";
-import React, { useMemo, useState } from "react";
+} from '@/components/ui/select';
+import { endOfDay, format, startOfDay, subDays } from 'date-fns';
+import React, { useMemo, useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -19,11 +19,11 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from "recharts";
+} from 'recharts';
 
 type Transaction = {
   date: string; // ISO format or other string representation of a date
-  type: "INCOME" | "EXPENSE";
+  type: 'INCOME' | 'EXPENSE';
   amount: number;
 };
 
@@ -38,15 +38,15 @@ type AccountChartProps = {
 };
 
 const DATE_RANGES: Record<string, { label: string; days: number | null }> = {
-  "7D": { label: "Last 7 Days", days: 7 },
-  "1M": { label: "Last Month", days: 30 },
-  "3M": { label: "Last 3 Months", days: 90 },
-  "6M": { label: "Last 6 Months", days: 180 },
-  ALL: { label: "All Time", days: null },
+  '7D': { label: 'Last 7 Days', days: 7 },
+  '1M': { label: 'Last Month', days: 30 },
+  '3M': { label: 'Last 3 Months', days: 90 },
+  '6M': { label: 'Last 6 Months', days: 180 },
+  'ALL': { label: 'All Time', days: null },
 };
 
 const AccountChart: React.FC<AccountChartProps> = ({ transactions }) => {
-  const [dateRange, setDateRange] = useState<string>("1M");
+  const [dateRange, setDateRange] = useState<string>('1M');
 
   const filteredData: FilteredData[] = useMemo(() => {
     const range = DATE_RANGES[dateRange];
@@ -56,28 +56,27 @@ const AccountChart: React.FC<AccountChartProps> = ({ transactions }) => {
       : startOfDay(new Date(0));
 
     const filtered = transactions.filter(
-      (t) =>
-        new Date(t.date) >= startDate && new Date(t.date) <= endOfDay(now)
+      (t) => new Date(t.date) >= startDate && new Date(t.date) <= endOfDay(now),
     );
 
     const grouped = filtered.reduce<Record<string, FilteredData>>(
       (acc, transaction) => {
-        const date = format(new Date(transaction.date), "MMM dd");
+        const date = format(new Date(transaction.date), 'MMM dd');
         if (!acc[date]) {
           acc[date] = { date, income: 0, expense: 0 };
         }
-        if (transaction.type === "INCOME") {
+        if (transaction.type === 'INCOME') {
           acc[date].income += transaction.amount;
         } else {
           acc[date].expense += transaction.amount;
         }
         return acc;
       },
-      {}
+      {},
     );
 
     return Object.values(grouped).sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
     );
   }, [transactions, dateRange]);
 
@@ -88,9 +87,9 @@ const AccountChart: React.FC<AccountChartProps> = ({ transactions }) => {
           income: acc.income + day.income,
           expense: acc.expense + day.expense,
         }),
-        { income: 0, expense: 0 }
+        { income: 0, expense: 0 },
       ),
-    [filteredData]
+    [filteredData],
   );
 
   return (
@@ -113,7 +112,7 @@ const AccountChart: React.FC<AccountChartProps> = ({ transactions }) => {
         </Select>
       </CardHeader>
       <CardContent>
-        <div className="flex justify-around mb-6 text-sm">
+        <div className="mb-6 flex justify-around text-sm">
           <div className="text-center">
             <p className="text-muted-foreground">Total Income</p>
             <p className="text-lg font-bold text-green-500">
@@ -131,8 +130,8 @@ const AccountChart: React.FC<AccountChartProps> = ({ transactions }) => {
             <p
               className={`text-lg font-bold ${
                 totals.income - totals.expense >= 0
-                  ? "text-green-500"
-                  : "text-red-500"
+                  ? 'text-green-500'
+                  : 'text-red-500'
               }`}
             >
               ${(totals.income - totals.expense).toFixed(2)}
@@ -161,9 +160,9 @@ const AccountChart: React.FC<AccountChartProps> = ({ transactions }) => {
               <Tooltip
                 formatter={(value: number) => [`$${value}`, undefined]}
                 contentStyle={{
-                  backgroundColor: "hsl(var(--popover))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "var(--radius)",
+                  backgroundColor: 'hsl(var(--popover))',
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: 'var(--radius)',
                 }}
               />
               <Legend />
