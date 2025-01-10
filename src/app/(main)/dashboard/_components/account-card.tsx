@@ -50,7 +50,7 @@ const AccountCard = ({ account }: { account: any }) => {
   }, [error]);
   return (
     <Card className="group relative transition-shadow hover:shadow-md">
-      <Link href={`/dashboard/${id}`}>
+      <Link href={`/account/${id}`}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium capitalize">
             {name}
