@@ -21,7 +21,6 @@ export const createAccount = async (data: AccountSchemaType) => {
   try {
     const { userId } = await auth();
     console.log(userId);
-    console.log(auth);
 
     if (!userId) {
       throw new Error('Unauthorized');
