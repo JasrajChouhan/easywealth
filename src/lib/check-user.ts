@@ -3,7 +3,7 @@ import { db } from './prisma';
 
 export const checkUser = async () => {
   const user = await currentUser();
-  console.log(user);
+  console.log('current-user', user);
   if (!user) return;
   try {
     const loggedInUser = await db?.user.findUnique({
@@ -11,8 +11,6 @@ export const checkUser = async () => {
         clerkUserId: user.id,
       },
     });
-
-    console.log(loggedInUser);
 
     if (loggedInUser) return loggedInUser;
 
@@ -28,7 +26,8 @@ export const checkUser = async () => {
     });
 
     return newUser;
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
+    throw new Error(error.message);
   }
 };
