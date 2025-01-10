@@ -1,8 +1,13 @@
+import { fetchUserAccounts } from '@/actions/account/fetch-user-account';
 import { CreateAccountDrawer } from '@/components/create-account-drawer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Plus } from 'lucide-react';
+import AccountCard from './_components/account-card';
 
-export default function page() {
+export default async function page() {
+  const accounts = await fetchUserAccounts();
+  console.log(fetchUserAccounts);
+
   return (
     <div>
       {/* dashboad progress */}
@@ -17,6 +22,10 @@ export default function page() {
             </CardContent>
           </Card>
         </CreateAccountDrawer>
+        {(accounts?.length as number) > 0 &&
+          accounts?.map((account) => (
+            <AccountCard key={account.id} account={account} />
+          ))}
       </div>
     </div>
   );
